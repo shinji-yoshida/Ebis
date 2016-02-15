@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using gotanda;
 using System;
+using System.Linq;
 
 namespace Ebis{
 	public class WindowSystem {
@@ -12,19 +13,14 @@ namespace Ebis{
 			get { return soleInstance; }
 		}
 
-		Stack<Window> windowStack = new Stack<Window>();
+		List<WindowCollection> windowCollections = new List<WindowCollection>();
 
-		public void DoModal(Window window) {
-			if(windowStack.Count > 0)
-				windowStack.Peek().Lock();
-			windowStack.Push(window);
+		public void AddWindowCollection(WindowCollection collection) {
+			windowCollections.Add (collection);
 		}
 
-		public void CloseModal(Window window) {
-			var popped = windowStack.Pop();
-			Assertion._assert_(popped == window);
-			if(windowStack.Count > 0)
-				windowStack.Peek().Unlock();
+		public T FindPrefab<T>() where T : Window {
+			return windowCollections.Select (wc => wc.FindPrefab<T> ()).FirstOrDefault ();
 		}
 	}
 }
