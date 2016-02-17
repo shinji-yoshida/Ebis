@@ -14,7 +14,7 @@ namespace Ebis {
 		}
 		
 
-		public T Open<T>(Action<T> onInstantiated) where T : Window {
+		public T Open<T>(Action<T> onInstantiated=null) where T : Window {
 			var prefab = WindowSystem.Instance.FindPrefab<T> ();
 			Assertion._assert_ (prefab != null);
 
@@ -22,7 +22,8 @@ namespace Ebis {
 			obj.transform.SetParent(windowContainer, false);
 			var result = obj.GetComponent<T> ();
 
-			onInstantiated (result);
+			if(onInstantiated != null)
+				onInstantiated (result);
 
 			result.NotifyOnOpening ();
 			result.NotifyOnOpened ();
