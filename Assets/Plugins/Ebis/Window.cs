@@ -46,7 +46,7 @@ namespace Ebis {
 			return lockables.IsLocked ();
 		}
 
-		public void Close() {
+		public virtual void Close() {
 			NotifyOnClosing ();
 			NotifyOnClosed ();
 
