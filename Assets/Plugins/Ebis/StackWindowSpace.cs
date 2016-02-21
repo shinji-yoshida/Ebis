@@ -22,6 +22,8 @@ namespace Ebis {
 			obj.transform.SetParent(windowContainer, false);
 			var result = obj.GetComponent<T> ();
 
+			result.OnInstantiated ();
+
 			if(onInstantiated != null)
 				onInstantiated (result);
 

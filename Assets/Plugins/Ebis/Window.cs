@@ -19,8 +19,9 @@ namespace Ebis {
 	}
 
 	public class Window : MonoBehaviour, ILockable {
-		CompositeLockable lockables = new CompositeLockable();
+		CompositeLockable lockables;
 		Subject<WindowEvent> onEventSubject;
+		CanvasGroup canvasGroup;
 
 		protected void Awake() {
 			onEventSubject = new Subject<WindowEvent> ();
@@ -44,6 +45,19 @@ namespace Ebis {
 
 		public bool IsLocked () {
 			return lockables.IsLocked ();
+		}
+
+		internal void OnInstantiated() {
+			this.canvasGroup = GetComponent<CanvasGroup> ();
+			if (canvasGroup == null)
+				canvasGroup = gameObject.AddComponent<CanvasGroup> ();
+
+			lockables = new CompositeLockable ();
+			lockables.Add (Lockable.Create (onLocked: () => canvasGroup.interactable = false, onUnlocked: () => canvasGroup.interactable = true));
+
+			OnOpeningAsObservable ().Subscribe (_ => Lock ()).AddTo (this);
+			OnOpenedAsObservable ().Subscribe (_ => Unlock ()).AddTo (this);
+			OnClosingAsObservable ().Subscribe (_ => Lock ()).AddTo (this);
 		}
 
 		public virtual void Close() {
