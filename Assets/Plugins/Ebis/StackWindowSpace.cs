@@ -4,66 +4,39 @@ using gotanda;
 using System;
 
 namespace Ebis {
-	public interface WindowSpace {
-		void Close (Window child);
-	}
-
 	public class StackWindowSpace : WindowSpace {
 		List<Window> windows;
-		Transform windowContainer;
 
-		public StackWindowSpace (Transform windowContainer)
+		public StackWindowSpace (Transform windowContainer) : base(windowContainer)
 		{
-			this.windowContainer = windowContainer;
 			windows = new List<Window> ();
 		}
-		
 
-		public T Open<T>(Action<T> onInstantiated=null) where T : Window {
-			var prefab = WindowSystem.Instance.FindPrefab<T> ();
-			Assertion._assert_ (prefab != null);
 
-			var obj = GameObject.Instantiate(prefab);
-			obj.transform.SetParent(windowContainer, false);
-			var result = obj.GetComponent<T> ();
-
-			result.OnInstantiated ();
-
-			if(onInstantiated != null)
-				onInstantiated (result);
-
+		protected override void AddWindow(Window newWindow) {
 			if (windows.Count > 0) {
 				windows.Last ().Lock ();
 			}
 
-			windows.Add (result);
-
-			result.Open (this);
-
-			result.Lock ();
-
-			result.NotifyOnOpening ();
-			result.Unlock ();
-			result.NotifyOnOpened ();
-
-			return result;
+			windows.Add (newWindow);
 		}
 
-		public void Close(Window child) {
-			Assertion._assert_ (windows.Contains (child));
+		public override bool IsTopWindow(Window child) {
+			return windows.Last () == child;
+		}
 
-			var toUnlockHead = windows.Last () == child;
-
-			child.Lock ();
-			child.NotifyOnClosing ();
-			child.NotifyOnClosed ();
-
+		protected override void RemoveWindow(Window child) {
 			windows.Remove (child);
-			child.DestroyWindow ();
+		}
 
-			if (windows.Count > 0 && toUnlockHead) {
+		protected override void AfterWindowRemoved(bool wasTop) {
+			if (windows.Count > 0 && wasTop) {
 				windows.Last ().Unlock ();
 			}
+		}
+
+		public override bool Contains (Window child) {
+			return windows.Contains (child);
 		}
 	}
 }
