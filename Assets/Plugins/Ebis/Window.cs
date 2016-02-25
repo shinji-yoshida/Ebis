@@ -22,6 +22,7 @@ namespace Ebis {
 		CompositeLockable lockables;
 		Subject<WindowEvent> onEventSubject;
 		CanvasGroup canvasGroup;
+		WindowSpace parentSpace;
 
 		protected void Awake() {
 			onEventSubject = new Subject<WindowEvent> ();
@@ -60,10 +61,15 @@ namespace Ebis {
 			OnClosingAsObservable ().Subscribe (_ => Lock ()).AddTo (this);
 		}
 
-		public virtual void Close() {
-			NotifyOnClosing ();
-			NotifyOnClosed ();
+		internal void Open(WindowSpace parentSpace) {
+			this.parentSpace = parentSpace;
+		}
 
+		public virtual void Close() {
+			parentSpace.Close (this);
+		}
+
+		public void DestroyWindow() {
 			Destroy (gameObject);
 		}
 
@@ -81,14 +87,14 @@ namespace Ebis {
 
 		protected virtual void OnOpened () {}
 
-		void NotifyOnClosing () {
+		public void NotifyOnClosing () {
 			OnClosing ();
 			onEventSubject.OnNext(new WindowEvent(WindowEventType.Closing));
 		}
 
 		protected virtual void OnClosing() {}
 
-		void NotifyOnClosed () {
+		public void NotifyOnClosed () {
 			OnClosed ();
 			onEventSubject.OnNext (new WindowEvent (WindowEventType.Closed));
 		}

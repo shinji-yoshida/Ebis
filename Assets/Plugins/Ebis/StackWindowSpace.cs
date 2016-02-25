@@ -4,13 +4,18 @@ using gotanda;
 using System;
 
 namespace Ebis {
-	public class StackWindowSpace {
-		Stack<Window> windows;
+	public interface WindowSpace {
+		void Close (Window child);
+	}
+
+	public class StackWindowSpace : WindowSpace {
+		List<Window> windows;
 		Transform windowContainer;
 
 		public StackWindowSpace (Transform windowContainer)
 		{
 			this.windowContainer = windowContainer;
+			windows = new List<Window> ();
 		}
 		
 
@@ -27,10 +32,38 @@ namespace Ebis {
 			if(onInstantiated != null)
 				onInstantiated (result);
 
+			if (windows.Count > 0) {
+				windows.Last ().Lock ();
+			}
+
+			windows.Add (result);
+
+			result.Open (this);
+
+			result.Lock ();
+
 			result.NotifyOnOpening ();
+			result.Unlock ();
 			result.NotifyOnOpened ();
 
 			return result;
+		}
+
+		public void Close(Window child) {
+			Assertion._assert_ (windows.Contains (child));
+
+			var toUnlockHead = windows.Last () == child;
+
+			child.Lock ();
+			child.NotifyOnClosing ();
+			child.NotifyOnClosed ();
+
+			windows.Remove (child);
+			child.DestroyWindow ();
+
+			if (windows.Count > 0 && toUnlockHead) {
+				windows.Last ().Unlock ();
+			}
 		}
 	}
 }
