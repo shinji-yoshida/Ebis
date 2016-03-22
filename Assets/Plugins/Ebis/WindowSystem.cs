@@ -19,6 +19,10 @@ namespace Ebis{
 			windowCollections.Add (collection);
 		}
 
+		public void RemoveWindowCollection (ResourcesWindowCollection windowCollection) {
+			windowCollections.Remove (windowCollection);
+		}
+
 		public T FindPrefab<T>() where T : Window {
 			return windowCollections.Select (wc => wc.FindPrefab<T> ()).FirstOrDefault ();
 		}

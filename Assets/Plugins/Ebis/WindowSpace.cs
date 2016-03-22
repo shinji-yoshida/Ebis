@@ -1,6 +1,8 @@
 ﻿using System;
 using gotanda;
 using UnityEngine;
+using UniPromise;
+using UniRx;
 
 namespace Ebis {
 	public abstract class WindowSpace {
@@ -26,13 +28,14 @@ namespace Ebis {
 
 			AddWindow (result);
 
-			result.Open (this);
-
+			var promiseOpen = result.Open (this);
 			result.Lock ();
-
 			result.NotifyOnOpening ();
-			result.Unlock ();
-			result.NotifyOnOpened ();
+
+			promiseOpen.Done (_ => {
+				result.Unlock ();
+				result.NotifyOnOpened ();
+			});
 
 			return result;
 		}
@@ -41,20 +44,23 @@ namespace Ebis {
 
 
 
-		public void Close(Window child) {
+		public void Close(Window child, Promise<Unit> closeTransition) {
 			Assertion._assert_ (Contains (child));
 
 			var wasTop = IsTopWindow (child);
 
 			child.Lock ();
 			child.NotifyOnClosing ();
-			child.NotifyOnClosed ();
 
-			RemoveWindow (child);
+			closeTransition.Done (_ => {
+				child.NotifyOnClosed ();
 
-			child.DestroyWindow ();
+				RemoveWindow (child);
 
-			AfterWindowRemoved (wasTop);
+				child.DestroyWindow ();
+
+				AfterWindowRemoved (wasTop);
+			});
 		}
 
 		public abstract bool IsTopWindow (Window child);

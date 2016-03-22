@@ -3,6 +3,7 @@ using System.Collections;
 using Ebis;
 using Lockables;
 using UniRx;
+using UniPromise;
 
 namespace Ebis {
 	public enum WindowEventType {
@@ -23,9 +24,15 @@ namespace Ebis {
 		Subject<WindowEvent> onEventSubject;
 		CanvasGroup canvasGroup;
 		WindowSpace parentSpace;
+		WindowTransition transition;
 
 		protected void Awake() {
 			onEventSubject = new Subject<WindowEvent> ();
+			transition = ImmediateWindowTransition.Default;
+		}
+
+		public void ChangeWindowTransition(WindowTransition newTransition) {
+			this.transition = newTransition;
 		}
 
 		public void AddLockable(ILockable lockable){
@@ -61,12 +68,13 @@ namespace Ebis {
 			OnClosingAsObservable ().Subscribe (_ => Lock ()).AddTo (this);
 		}
 
-		internal void Open(WindowSpace parentSpace) {
+		internal Promise<Unit> Open(WindowSpace parentSpace) {
 			this.parentSpace = parentSpace;
+			return transition.Open ();
 		}
 
 		public virtual void Close() {
-			parentSpace.Close (this);
+			parentSpace.Close (this, transition.Close());
 		}
 
 		public void DestroyWindow() {
