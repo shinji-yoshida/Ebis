@@ -24,7 +24,7 @@ namespace Ebis{
 		}
 
 		public T FindPrefab<T>() where T : Window {
-			return windowCollections.Select (wc => wc.FindPrefab<T> ()).FirstOrDefault ();
+			return windowCollections.Select (wc => wc.FindPrefab<T> ()).FirstOrDefault (w => w != null);
 		}
 	}
 }
