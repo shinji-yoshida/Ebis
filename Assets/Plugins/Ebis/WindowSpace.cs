@@ -1,5 +1,4 @@
 ﻿using System;
-using gotanda;
 using UnityEngine;
 using UniPromise;
 using UniRx;
@@ -15,7 +14,7 @@ namespace Ebis {
 
 		public T Open<T>(Action<T> onInstantiated=null) where T : Window {
 			var prefab = WindowSystem.Instance.FindPrefab<T> ();
-			Assertion._assert_ (prefab != null);
+			Debug.Assert (prefab != null);
 
 			var obj = GameObject.Instantiate(prefab);
 			obj.transform.SetParent(windowContainer, false);
@@ -45,7 +44,7 @@ namespace Ebis {
 
 
 		public void Close(Window child, Promise<Unit> closeTransition) {
-			Assertion._assert_ (Contains (child));
+			Debug.Assert (Contains (child));
 
 			var wasTop = IsTopWindow (child);
 

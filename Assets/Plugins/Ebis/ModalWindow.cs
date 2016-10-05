@@ -1,7 +1,6 @@
 ﻿using UniPromise;
 using UniRx;
 using UniPromise.UniRxBridge;
-using gotanda;
 using System;
 
 
@@ -16,7 +15,7 @@ namespace Ebis {
 		}
 
 		protected override void OnOpening () {
-			Assertion._assert_ (promiseClosed != null, "should call InitializeModal() before Open");
+			UnityEngine.Debug.Assert(promiseClosed != null, "should call InitializeModal() before Open");
 			base.OnOpening ();
 		}
 

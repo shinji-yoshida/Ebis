@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using gotanda;
 using System;
+using System.Linq;
 
 namespace Ebis {
 	public class StackWindowSpace : WindowSpace {
