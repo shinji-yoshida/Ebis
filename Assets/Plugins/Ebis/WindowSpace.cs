@@ -69,5 +69,7 @@ namespace Ebis {
 		protected abstract void RemoveWindow (Window child);
 
 		protected abstract void AfterWindowRemoved(bool wasTop);
+
+		public abstract int WindowCount { get; }
 	}
 }

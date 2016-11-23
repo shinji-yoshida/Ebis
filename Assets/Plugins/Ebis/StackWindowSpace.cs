@@ -25,6 +25,15 @@ namespace Ebis {
 			return windows.Last () == child;
 		}
 
+		public Window TopWindow {
+			get {
+				if (windows.Count > 0)
+					return windows.Last ();
+				else
+					return null;
+			}
+		}
+
 		protected override void RemoveWindow(Window child) {
 			windows.Remove (child);
 		}
@@ -37,6 +46,12 @@ namespace Ebis {
 
 		public override bool Contains (Window child) {
 			return windows.Contains (child);
+		}
+
+		public override int WindowCount {
+			get {
+				return windows.Count;
+			}
 		}
 	}
 }
