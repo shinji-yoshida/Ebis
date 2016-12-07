@@ -6,14 +6,14 @@ using UniRx;
 using UniPromise;
 
 namespace Ebis {
-	public enum WindowEventType {
-		Opening, Opened, Closing, Closed
+	public enum WindowStatusType {
+		Initial, Opening, Opened, Closing, Closed
 	}
 
 	public struct WindowEvent {
-		public readonly WindowEventType type;
+		public readonly WindowStatusType type;
 
-		public WindowEvent (WindowEventType type)
+		public WindowEvent (WindowStatusType type)
 		{
 			this.type = type;
 		}
@@ -25,14 +25,24 @@ namespace Ebis {
 		CanvasGroup canvasGroup;
 		WindowSpace parentSpace;
 		WindowTransition transition;
+		Deferred<Unit> deferredOpened;
+		WindowStatusType windowStatus;
 
 		protected void Awake() {
 			onEventSubject = new Subject<WindowEvent> ();
 			transition = ImmediateWindowTransition.Default;
+			deferredOpened = new Deferred<Unit> ();
+			windowStatus = WindowStatusType.Initial;
 		}
 
 		public void ChangeWindowTransition(WindowTransition newTransition) {
 			this.transition = newTransition;
+		}
+
+		public WindowStatusType WindowStatus {
+			get {
+				return windowStatus;
+			}
 		}
 
 		public void AddLockable(ILockable lockable){
@@ -64,7 +74,10 @@ namespace Ebis {
 			lockables.Add (Lockable.Create (onLocked: () => canvasGroup.interactable = false, onUnlocked: () => canvasGroup.interactable = true));
 
 			OnOpeningAsObservable ().Subscribe (_ => Lock ()).AddTo (this);
-			OnOpenedAsObservable ().Subscribe (_ => Unlock ()).AddTo (this);
+			OnOpenedAsObservable ().Subscribe (_ => {
+				Unlock ();
+				deferredOpened.Resolve(Unit.Default);
+			}).AddTo (this);
 			OnClosingAsObservable ().Subscribe (_ => Lock ()).AddTo (this);
 		}
 
@@ -74,7 +87,14 @@ namespace Ebis {
 		}
 
 		public virtual void Close() {
+			if (WindowStatus == WindowStatusType.Closing || WindowStatus == WindowStatusType.Closed)
+				return;
+			
 			parentSpace.Close (this, transition.Close());
+		}
+
+		public void CloseImmediately() {
+			parentSpace.Close (this, Promises.Resolved(Unit.Default));
 		}
 
 		public void DestroyWindow() {
@@ -82,29 +102,33 @@ namespace Ebis {
 		}
 
 		public void NotifyOnOpening() {
+			windowStatus = WindowStatusType.Opening;
 			OnOpening ();
-			onEventSubject.OnNext (new WindowEvent(WindowEventType.Opening));
+			onEventSubject.OnNext (new WindowEvent(WindowStatusType.Opening));
 		}
 
 		protected virtual void OnOpening () {}
 
 		public void NotifyOnOpened() {
+			windowStatus = WindowStatusType.Opened;
 			OnOpened ();
-			onEventSubject.OnNext (new WindowEvent(WindowEventType.Opened));
+			onEventSubject.OnNext (new WindowEvent(WindowStatusType.Opened));
 		}
 
 		protected virtual void OnOpened () {}
 
 		public void NotifyOnClosing () {
+			windowStatus = WindowStatusType.Closing;
 			OnClosing ();
-			onEventSubject.OnNext(new WindowEvent(WindowEventType.Closing));
+			onEventSubject.OnNext(new WindowEvent(WindowStatusType.Closing));
 		}
 
 		protected virtual void OnClosing() {}
 
 		public void NotifyOnClosed () {
+			windowStatus = WindowStatusType.Closed;
 			OnClosed ();
-			onEventSubject.OnNext (new WindowEvent (WindowEventType.Closed));
+			onEventSubject.OnNext (new WindowEvent (WindowStatusType.Closed));
 		}
 
 		protected virtual void OnClosed () {}
@@ -114,19 +138,25 @@ namespace Ebis {
 		}
 
 		public IObservable<WindowEvent> OnOpeningAsObservable() {
-			return OnEventAsObservable().Where(e => e.type == WindowEventType.Opening);
+			return OnEventAsObservable().Where(e => e.type == WindowStatusType.Opening);
 		}
 
 		public IObservable<WindowEvent> OnOpenedAsObservable() {
-			return OnEventAsObservable().Where(e => e.type == WindowEventType.Opened);
+			return OnEventAsObservable().Where(e => e.type == WindowStatusType.Opened);
 		}
 
 		public IObservable<WindowEvent> OnClosingAsObservable() {
-			return OnEventAsObservable().Where(e => e.type == WindowEventType.Closing);
+			return OnEventAsObservable().Where(e => e.type == WindowStatusType.Closing);
 		}
 
 		public IObservable<WindowEvent> OnClosedAsObservable() {
-			return OnEventAsObservable().Where(e => e.type == WindowEventType.Closed);
+			return OnEventAsObservable().Where(e => e.type == WindowStatusType.Closed);
+		}
+
+		public Promise<Unit> PromiseOpened {
+			get {
+				return deferredOpened;
+			}
 		}
 	}
 }

@@ -28,11 +28,9 @@ namespace Ebis {
 			AddWindow (result);
 
 			var promiseOpen = result.Open (this);
-			result.Lock ();
 			result.NotifyOnOpening ();
 
 			promiseOpen.Done (_ => {
-				result.Unlock ();
 				result.NotifyOnOpened ();
 			});
 
@@ -48,17 +46,15 @@ namespace Ebis {
 
 			var wasTop = IsTopWindow (child);
 
-			child.Lock ();
 			child.NotifyOnClosing ();
 
 			closeTransition.Done (_ => {
-				child.NotifyOnClosed ();
-
 				RemoveWindow (child);
+				AfterWindowRemoved (wasTop);
 
+				child.NotifyOnClosed ();
 				child.DestroyWindow ();
 
-				AfterWindowRemoved (wasTop);
 			});
 		}
 

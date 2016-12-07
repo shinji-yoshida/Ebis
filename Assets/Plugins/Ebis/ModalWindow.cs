@@ -20,6 +20,9 @@ namespace Ebis {
 		}
 
 		public void CloseModal(TSelection selection) {
+			if (WindowStatus == WindowStatusType.Closing || WindowStatus == WindowStatusType.Closed)
+				return;
+			
 			this.selection = selection;
 			base.Close ();
 		}
