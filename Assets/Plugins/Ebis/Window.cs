@@ -65,6 +65,10 @@ namespace Ebis {
 			return lockables.IsLocked ();
 		}
 
+		public IObservable<bool> OnLockUpdatedAsObservable () {
+			return lockables.OnLockUpdatedAsObservable ();
+		}
+
 		internal void OnInstantiated() {
 			this.canvasGroup = GetComponent<CanvasGroup> ();
 			if (canvasGroup == null)
