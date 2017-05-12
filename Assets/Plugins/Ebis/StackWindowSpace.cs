@@ -19,6 +19,7 @@ namespace Ebis {
 			}
 
 			windows.Add (newWindow);
+			windowSpaceLockables.Add (newWindow);
 		}
 
 		public override bool IsTopWindow(Window child) {
@@ -36,6 +37,7 @@ namespace Ebis {
 
 		protected override void RemoveWindow(Window child) {
 			windows.Remove (child);
+			windowSpaceLockables.Remove (child);
 		}
 
 		protected override void AfterWindowRemoved(bool wasTop) {

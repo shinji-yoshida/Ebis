@@ -2,14 +2,17 @@
 using UnityEngine;
 using UniPromise;
 using UniRx;
+using Lockables;
 
 namespace Ebis {
-	public abstract class WindowSpace {
+	public abstract class WindowSpace : ILockable {
 		Transform windowContainer;
+		protected CompositeLockable windowSpaceLockables;
 
 		public WindowSpace (Transform windowContainer)
 		{
 			this.windowContainer = windowContainer;
+			windowSpaceLockables = new CompositeLockable ();
 		}
 
 		public T Open<T>(Action<T> onInstantiated=null) where T : Window {
@@ -67,5 +70,25 @@ namespace Ebis {
 		protected abstract void AfterWindowRemoved(bool wasTop);
 
 		public abstract int WindowCount { get; }
+
+		public void Lock () {
+			windowSpaceLockables.Lock ();
+		}
+
+		public void Unlock () {
+			windowSpaceLockables.Unlock ();
+		}
+
+		public void ForceUnlock () {
+			windowSpaceLockables.ForceUnlock ();
+		}
+
+		public bool IsLocked () {
+			return windowSpaceLockables.IsLocked ();
+		}
+
+		public IObservable<bool> OnLockUpdatedAsObservable () {
+			return windowSpaceLockables.OnLockUpdatedAsObservable ();
+		}
 	}
 }
