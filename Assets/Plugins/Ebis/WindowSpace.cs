@@ -17,7 +17,7 @@ namespace Ebis {
 
 		public T Open<T>(Action<T> onInstantiated=null) where T : Window {
 			var prefab = WindowSystem.Instance.FindPrefab<T> ();
-			Debug.Assert (prefab != null);
+			Debug.Assert (prefab != null, typeof(T).Name);
 
 			var obj = GameObject.Instantiate(prefab);
 			obj.transform.SetParent(windowContainer, false);
