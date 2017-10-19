@@ -8,11 +8,11 @@ namespace Ebis {
 	public class ImmediateWindowTransition : WindowTransition {
 		public static readonly ImmediateWindowTransition Default = new ImmediateWindowTransition ();
 
-		public Promise<Unit> Open () {
+		public Promise<CUnit> Open () {
 			return UnitPromise.Resolved;
 		}
 
-		public Promise<Unit> Close () {
+		public Promise<CUnit> Close () {
 			return UnitPromise.Resolved;
 		}
 	}

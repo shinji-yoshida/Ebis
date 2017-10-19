@@ -10,7 +10,7 @@ namespace Ebis {
 		Initial, Opening, Opened, Closing, Closed
 	}
 
-	public struct WindowEvent {
+	public class WindowEvent {
 		public readonly WindowStatusType type;
 
 		public WindowEvent (WindowStatusType type)
@@ -25,13 +25,13 @@ namespace Ebis {
 		CanvasGroup canvasGroup;
 		WindowSpace parentSpace;
 		WindowTransition transition;
-		Deferred<Unit> deferredOpened;
+		Deferred<CUnit> deferredOpened;
 		WindowStatusType windowStatus;
 
 		protected void Awake() {
 			onEventSubject = new Subject<WindowEvent> ();
 			transition = ImmediateWindowTransition.Default;
-			deferredOpened = new Deferred<Unit> ();
+			deferredOpened = new Deferred<CUnit> ();
 			windowStatus = WindowStatusType.Initial;
 		}
 
@@ -80,12 +80,12 @@ namespace Ebis {
 			OnOpeningAsObservable ().Subscribe (_ => Lock ()).AddTo (this);
 			OnOpenedAsObservable ().Subscribe (_ => {
 				Unlock ();
-				deferredOpened.Resolve(Unit.Default);
+				deferredOpened.Resolve(CUnit.Default);
 			}).AddTo (this);
 			OnClosingAsObservable ().Subscribe (_ => Lock ()).AddTo (this);
 		}
 
-		internal Promise<Unit> Open(WindowSpace parentSpace) {
+		internal Promise<CUnit> Open(WindowSpace parentSpace) {
 			this.parentSpace = parentSpace;
 			return transition.Open ();
 		}
@@ -98,7 +98,7 @@ namespace Ebis {
 		}
 
 		public void CloseImmediately() {
-			parentSpace.Close (this, Promises.Resolved(Unit.Default));
+			parentSpace.Close (this, Promises.Resolved(CUnit.Default));
 		}
 
 		public void DestroyWindow() {
@@ -157,7 +157,7 @@ namespace Ebis {
 			return OnEventAsObservable().Where(e => e.type == WindowStatusType.Closed);
 		}
 
-		public Promise<Unit> PromiseOpened {
+		public Promise<CUnit> PromiseOpened {
 			get {
 				return deferredOpened;
 			}

@@ -6,19 +6,19 @@ using System;
 
 namespace Ebis {
 	public class PluggableWindowTransition : WindowTransition {
-		Func<Promise<Unit>> open;
-		Func<Promise<Unit>> close;
+		Func<Promise<CUnit>> open;
+		Func<Promise<CUnit>> close;
 
-		public PluggableWindowTransition (Func<Promise<Unit>> open, Func<Promise<Unit>> close) {
+		public PluggableWindowTransition (Func<Promise<CUnit>> open, Func<Promise<CUnit>> close) {
 			this.open = open;
 			this.close = close;
 		}
 		
-		public Promise<Unit> Open () {
+		public Promise<CUnit> Open () {
 			return open ();
 		}
 
-		public Promise<Unit> Close () {
+		public Promise<CUnit> Close () {
 			return close ();
 		}
 	}

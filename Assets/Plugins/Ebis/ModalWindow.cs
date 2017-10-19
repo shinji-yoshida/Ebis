@@ -5,8 +5,8 @@ using System;
 
 
 namespace Ebis {
-	public abstract class ModalWindow<TSelection> : Window {
-		Promise<Unit> promiseClosed;
+	public abstract class ModalWindow<TSelection> : Window where TSelection : class {
+		Promise<CUnit> promiseClosed;
 		TSelection selection;
 
 

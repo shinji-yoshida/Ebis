@@ -3,8 +3,8 @@ using UniRx;
 
 namespace Ebis {
 	public interface WindowTransition {
-		Promise<Unit> Open ();
+		Promise<CUnit> Open ();
 
-		Promise<Unit> Close ();
+		Promise<CUnit> Close ();
 	}
 }

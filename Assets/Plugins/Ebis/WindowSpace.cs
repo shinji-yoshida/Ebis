@@ -44,7 +44,7 @@ namespace Ebis {
 
 
 
-		public void Close(Window child, Promise<Unit> closeTransition) {
+		public void Close(Window child, Promise<CUnit> closeTransition) {
 			Debug.Assert (Contains (child));
 
 			var wasTop = IsTopWindow (child);
