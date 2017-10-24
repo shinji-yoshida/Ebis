@@ -50,6 +50,12 @@ namespace Ebis {
 			return windows.Contains (child);
 		}
 
+		public override IEnumerable<Window> AllWindows {
+			get {
+				return windows;
+			}
+		}
+
 		public override int WindowCount {
 			get {
 				return windows.Count;

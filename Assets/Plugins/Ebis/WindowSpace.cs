@@ -3,6 +3,7 @@ using UnityEngine;
 using UniPromise;
 using UniRx;
 using Lockables;
+using System.Collections.Generic;
 
 namespace Ebis {
 	public abstract class WindowSpace : ILockable {
@@ -62,6 +63,10 @@ namespace Ebis {
 		}
 
 		public abstract bool IsTopWindow (Window child);
+
+		public abstract IEnumerable<Window> AllWindows {
+			get;
+		}
 
 		public abstract bool Contains (Window child);
 

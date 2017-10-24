@@ -33,6 +33,12 @@ namespace Ebis {
 		protected override void AfterWindowRemoved (bool wasTop) {
 		}
 
+		public override IEnumerable<Window> AllWindows {
+			get {
+				return windows;
+			}
+		}
+
 		public override int WindowCount {
 			get {
 				return windows.Count;

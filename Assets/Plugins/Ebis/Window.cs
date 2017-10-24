@@ -98,6 +98,10 @@ namespace Ebis {
 		}
 
 		public void CloseImmediately() {
+			CloseWithoutTransition ();
+		}
+
+		public void CloseWithoutTransition() {
 			parentSpace.Close (this, Promises.Resolved(CUnit.Default));
 		}
 
