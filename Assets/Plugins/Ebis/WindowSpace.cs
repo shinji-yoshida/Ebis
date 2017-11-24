@@ -48,11 +48,10 @@ namespace Ebis {
 		public void Close(Window child, Promise<CUnit> closeTransition) {
 			Debug.Assert (Contains (child));
 
-			var wasTop = IsTopWindow (child);
-
 			child.NotifyOnClosing ();
 
 			closeTransition.Done (_ => {
+				var wasTop = IsTopWindow (child);
 				RemoveWindow (child);
 				AfterWindowRemoved (wasTop);
 
