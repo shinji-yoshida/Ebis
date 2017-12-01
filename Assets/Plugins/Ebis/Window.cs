@@ -98,6 +98,9 @@ namespace Ebis {
 		}
 
 		public void CloseImmediately() {
+			if (WindowStatus == WindowStatusType.Closing || WindowStatus == WindowStatusType.Closed)
+				return;
+			
 			CloseWithoutTransition ();
 		}
 

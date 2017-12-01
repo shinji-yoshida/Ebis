@@ -46,7 +46,7 @@ namespace Ebis {
 
 
 		public void Close(Window child, Promise<CUnit> closeTransition) {
-			Debug.Assert (Contains (child));
+			Debug.Assert (Contains (child), child.ToString());
 
 			child.NotifyOnClosing ();
 
