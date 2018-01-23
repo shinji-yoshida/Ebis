@@ -9,11 +9,17 @@ namespace Ebis {
 	public abstract class WindowSpace : ILockable {
 		Transform windowContainer;
 		protected CompositeLockable windowSpaceLockables;
+		Subject<Window> windowAddedSubject;
 
 		public WindowSpace (Transform windowContainer)
 		{
 			this.windowContainer = windowContainer;
 			windowSpaceLockables = new CompositeLockable ();
+			windowAddedSubject = new Subject<Window> ();
+		}
+
+		public IObservable<Window> OnWindowAddedAsObservable() {
+			return windowAddedSubject;
 		}
 
 		public T Open<T>(Action<T> onInstantiated=null) where T : Window {
@@ -30,6 +36,7 @@ namespace Ebis {
 				onInstantiated (result);
 
 			AddWindow (result);
+			windowAddedSubject.OnNext (result);
 
 			var promiseOpen = result.Open (this);
 			result.NotifyOnOpening ();
