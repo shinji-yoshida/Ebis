@@ -87,14 +87,14 @@ namespace Ebis {
 
 		internal Promise<CUnit> Open(WindowSpace parentSpace) {
 			this.parentSpace = parentSpace;
-			return transition.Open ();
+			return transition.Open ().AddTo(this);
 		}
 
 		public virtual void Close() {
 			if (WindowStatus == WindowStatusType.Closing || WindowStatus == WindowStatusType.Closed)
 				return;
 			
-			parentSpace.Close (this, transition.Close());
+			parentSpace.Close (this, transition.Close().AddTo(this));
 		}
 
 		public void CloseImmediately() {
