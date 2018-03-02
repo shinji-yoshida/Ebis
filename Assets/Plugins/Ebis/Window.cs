@@ -45,6 +45,12 @@ namespace Ebis {
 			}
 		}
 
+		public CanvasProperty CanvasProperty {
+			get {
+				return parentSpace.canvasProperty;
+			}
+		}
+
 		public void AddLockable(ILockable lockable){
 			lockables.Add (lockable);
 		}

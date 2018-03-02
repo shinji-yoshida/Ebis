@@ -10,10 +10,11 @@ namespace Ebis {
 		Transform windowContainer;
 		protected CompositeLockable windowSpaceLockables;
 		Subject<Window> windowAddedSubject;
+		public readonly CanvasProperty canvasProperty;
 
-		public WindowSpace (Transform windowContainer)
-		{
+		public WindowSpace (Transform windowContainer, CanvasProperty canvasProperty) {
 			this.windowContainer = windowContainer;
+			this.canvasProperty = canvasProperty;
 			windowSpaceLockables = new CompositeLockable ();
 			windowAddedSubject = new Subject<Window> ();
 		}
@@ -22,7 +23,7 @@ namespace Ebis {
 			return windowAddedSubject;
 		}
 
-		public T Open<T>(Action<T> onInstantiated=null) where T : Window {
+		public T Open<T>(Action<T, CanvasProperty> onInstantiated=null) where T : Window {
 			var prefab = WindowSystem.Instance.FindPrefab<T> ();
 			Debug.Assert (prefab != null, typeof(T).Name);
 
@@ -33,7 +34,7 @@ namespace Ebis {
 			result.OnInstantiated ();
 
 			if(onInstantiated != null)
-				onInstantiated (result);
+				onInstantiated (result, canvasProperty);
 
 			AddWindow (result);
 			windowAddedSubject.OnNext (result);
@@ -46,6 +47,10 @@ namespace Ebis {
 			});
 
 			return result;
+		}
+
+		public T Open<T>(Action<T> onInstantiated=null) where T : Window {
+			return Open<T> ((t, canvasProperty) => onInstantiated (t));
 		}
 
 		protected abstract void AddWindow (Window newWindow);

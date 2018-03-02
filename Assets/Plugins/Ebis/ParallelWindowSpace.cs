@@ -7,7 +7,7 @@ namespace Ebis {
 	public class ParallelWindowSpace : WindowSpace {
 		List<Window> windows;
 
-		public ParallelWindowSpace (Transform windowContainer) : base(windowContainer)
+		public ParallelWindowSpace (Transform windowContainer, CanvasProperty canvasProperty) : base(windowContainer, canvasProperty)
 		{
 			windows = new List<Window> ();
 		}

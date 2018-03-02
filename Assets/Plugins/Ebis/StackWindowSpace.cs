@@ -7,7 +7,7 @@ namespace Ebis {
 	public class StackWindowSpace : WindowSpace {
 		List<Window> windows;
 
-		public StackWindowSpace (Transform windowContainer) : base(windowContainer)
+		public StackWindowSpace (Transform windowContainer, CanvasProperty canvasProperty) : base(windowContainer, canvasProperty)
 		{
 			windows = new List<Window> ();
 		}
