@@ -4,6 +4,7 @@ using Ebis;
 using Lockables;
 using UniRx;
 using UniPromise;
+using Ebis.SafeArea;
 
 namespace Ebis {
 	public enum WindowStatusType {
@@ -93,6 +94,12 @@ namespace Ebis {
 
 		internal Promise<CUnit> Open(WindowSpace parentSpace) {
 			this.parentSpace = parentSpace;
+
+			foreach (var each in GetComponentsInChildren<SafeAreaLayoutGroupPadding>())
+				each.Initialize (parentSpace.canvasProperty);
+			foreach (var each in GetComponentsInChildren<SafeAreaLayoutElementResizing>())
+				each.Initialize (parentSpace.canvasProperty);
+			
 			return transition.Open ().AddTo(this);
 		}
 
