@@ -17,8 +17,8 @@ namespace Ebis {
 			this.height = height;
 			var ratio = this.height / Screen.height;
 			var safeArea = SafeArea.SafeAreaAccessor.SafeArea;
-			safeTopPadding = Mathf.RoundToInt(safeArea.yMin * ratio);
-			safeBottomPadding = Mathf.RoundToInt((Screen.height - safeArea.yMax) * ratio);
+			safeBottomPadding = Mathf.RoundToInt(safeArea.yMin * ratio);
+			safeTopPadding = Mathf.RoundToInt((Screen.height - safeArea.yMax) * ratio);
 			safeLeftPadding = Mathf.RoundToInt (safeArea.xMin * ratio);
 			safeRightPadding = Mathf.RoundToInt((Screen.width - safeArea.xMax) * ratio);
 		}

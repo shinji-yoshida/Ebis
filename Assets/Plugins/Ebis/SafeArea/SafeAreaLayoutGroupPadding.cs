@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace Ebis.SafeArea {
-	public class SafeAreaLayoutGroupPadding : MonoBehaviour {
+	public class SafeAreaLayoutGroupPadding : MonoBehaviour, ISafeAreaComponent {
 		[SerializeField] LayoutGroup _layoutGroup;
 		[SerializeField] bool paddingTop;
 		[SerializeField] bool paddingBottom;
@@ -16,7 +16,7 @@ namespace Ebis.SafeArea {
 			}
 		}
 
-		public void Initialize(CanvasProperty property) {
+		public void Apply (CanvasProperty property) {
 			if (!PaddingEnabled) {
 				return;
 			}
@@ -29,7 +29,7 @@ namespace Ebis.SafeArea {
 				padding.left += property.safeLeftPadding;
 			if (paddingRight)
 				padding.right += property.safeRightPadding;
-			
+
 			LayoutGroup.padding = padding;
 		}
 

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace Ebis.SafeArea {
-	public class SafeAreaLayoutElementResizing : MonoBehaviour {
+	public class SafeAreaLayoutElementResizing : MonoBehaviour, ISafeAreaComponent {
 		[SerializeField] bool resizeBySafeAreaTopPadding;
 		[SerializeField] bool resizeBySafeAreaBottomPadding;
 		[SerializeField] bool resizeBySafeAreaLeftPadding;
@@ -18,7 +18,7 @@ namespace Ebis.SafeArea {
 			}
 		}
 
-		public void Initialize(CanvasProperty property) {
+		public void Apply (CanvasProperty property) {
 			if (resizeBySafeAreaTopPadding)
 				AddHeight (property.safeTopPadding);
 			if (resizeBySafeAreaBottomPadding)

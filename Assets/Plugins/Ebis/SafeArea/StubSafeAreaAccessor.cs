@@ -7,7 +7,7 @@ namespace Ebis.SafeArea {
 		Rect safeArea;
 
 		public StubSafeAreaAccessor(int topPadding, int bottomPadding, int leftPadding, int rightPadding) {
-			safeArea = new Rect (leftPadding, topPadding, Screen.width - leftPadding - rightPadding, Screen.height - topPadding - bottomPadding);
+			safeArea = new Rect (leftPadding, bottomPadding, Screen.width - leftPadding - rightPadding, Screen.height - topPadding - bottomPadding);
 		}
 
 		public void Install() {
