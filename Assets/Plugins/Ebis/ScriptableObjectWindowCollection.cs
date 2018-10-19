@@ -6,8 +6,13 @@ namespace Ebis {
 	public class ScriptableObjectWindowCollection : ScriptableObject, WindowCollection {
 		[SerializeField] List<Window> windows;
 
-		public T FindPrefab<T> () where T : Window {
-			return windows.Select (w => w.GetComponent<T> ()).FirstOrDefault (w => w != null);
+		public T FindPrefab<T> (string variation) where T : Window {
+			if(variation == null)
+				return windows.Select (w => w.GetComponent<T> ()).FirstOrDefault (w => w != null);
+			else
+				return windows.Select (w => w.GetComponent<T> ())
+					.Where (w => w != null)
+					.FirstOrDefault (w => w.gameObject.name.Equals (variation + typeof(T).Name));
 		}
 	}
 }

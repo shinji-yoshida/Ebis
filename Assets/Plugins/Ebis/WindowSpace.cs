@@ -24,7 +24,19 @@ namespace Ebis {
 		}
 
 		public T Open<T>(Action<T, CanvasProperty> onInstantiated=null) where T : Window {
-			var prefab = WindowSystem.Instance.FindPrefab<T> ();
+			return Open<T> (null, onInstantiated);
+		}
+
+		public T Open<T>(Action<T> onInstantiated=null) where T : Window {
+			return Open<T> (null, (t, canvasProperty) => onInstantiated (t));
+		}
+
+		public T Open<T>(string variation, Action<T> onInstantiated=null) where T : Window {
+			return Open<T> (variation, (t, canvasProperty) => onInstantiated (t));
+		}
+
+		public T Open<T>(string variation, Action<T, CanvasProperty> onInstantiated=null) where T : Window {
+			var prefab = WindowSystem.Instance.FindPrefab<T> (variation);
 			Debug.Assert (prefab != null, typeof(T).Name);
 
 			var obj = GameObject.Instantiate(prefab);
@@ -47,10 +59,6 @@ namespace Ebis {
 			});
 
 			return result;
-		}
-
-		public T Open<T>(Action<T> onInstantiated=null) where T : Window {
-			return Open<T> ((t, canvasProperty) => onInstantiated (t));
 		}
 
 		protected abstract void AddWindow (Window newWindow);

@@ -11,8 +11,11 @@ namespace Ebis {
 		}
 		
 
-		public T FindPrefab<T> () where T : Window {
-			return Resources.Load<T> (Path.Combine (basePath, typeof(T).Name));
+		public T FindPrefab<T> (string variation) where T : Window {
+			if(variation == null)
+				return Resources.Load<T> (Path.Combine (basePath, typeof(T).Name));
+			else
+				return Resources.Load<T> (Path.Combine(Path.Combine (basePath, typeof(T).Name), variation + typeof(T).Name));
 		}
 	}
 }

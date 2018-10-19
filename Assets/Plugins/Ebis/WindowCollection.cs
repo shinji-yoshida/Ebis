@@ -3,6 +3,6 @@ using System.Collections;
 
 namespace Ebis {
 	public interface WindowCollection {
-		T FindPrefab<T> () where T : Window;
+		T FindPrefab<T> (string variation) where T : Window;
 	}
 }
