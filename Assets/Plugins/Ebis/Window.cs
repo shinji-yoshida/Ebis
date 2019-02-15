@@ -120,6 +120,8 @@ namespace Ebis {
 		}
 
 		public void DestroyWindow() {
+			if (gameObject == null)
+				return;
 			Destroy (gameObject);
 		}
 
