@@ -35,7 +35,7 @@ namespace Ebis {
 
 		public override IEnumerable<Window> AllWindows {
 			get {
-				return windows;
+				return windows.Reverse<Window>();
 			}
 		}
 

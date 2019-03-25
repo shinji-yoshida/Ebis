@@ -83,6 +83,7 @@ namespace Ebis {
 
 		public abstract bool IsTopWindow (Window child);
 
+		/// returns all windows in WindowSpace, sorted by top to bottom (foreground to background).
 		public abstract IEnumerable<Window> AllWindows {
 			get;
 		}
