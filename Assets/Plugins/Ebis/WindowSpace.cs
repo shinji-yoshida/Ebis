@@ -27,12 +27,15 @@ namespace Ebis {
 			return Open<T> (null, onInstantiated);
 		}
 
-		public T Open<T>(Action<T> onInstantiated=null) where T : Window {
-			return Open<T> (null, (t, canvasProperty) => onInstantiated (t));
+		public T Open<T>(Action<T> onInstantiated=null) where T : Window
+		{
+			Action<T, CanvasProperty> callback = onInstantiated != null ? (t, canvasProperty) => onInstantiated(t) : (Action<T, CanvasProperty>) null; 
+			return Open<T> (null, callback);
 		}
 
 		public T Open<T>(string variation, Action<T> onInstantiated=null) where T : Window {
-			return Open<T> (variation, (t, canvasProperty) => onInstantiated (t));
+			Action<T, CanvasProperty> callback = onInstantiated != null ? (t, canvasProperty) => onInstantiated(t) : (Action<T, CanvasProperty>) null;
+			return Open<T> (variation, callback);
 		}
 
 		public T Open<T>(string variation, Action<T, CanvasProperty> onInstantiated=null) where T : Window {
