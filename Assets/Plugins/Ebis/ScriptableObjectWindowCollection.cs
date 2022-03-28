@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 
 namespace Ebis {
+	[CreateAssetMenu]
 	public class ScriptableObjectWindowCollection : ScriptableObject, WindowCollection {
 		[SerializeField] List<Window> windows;
 
